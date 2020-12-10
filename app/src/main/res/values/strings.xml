@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Reserve meal</string>
+    <string name="btn_sign_in">Sign In</string>
+    <string name="label_go_to_register"><u> Don\'t have an account yet? Create new </u></string>
+    <string name="label_dni">ID Card (D.N.I.)</string>
+    <string name="label_password">Password</string>
+    <string name="label_go_to_forget"><u> Forget password? </u> </string>
+    <string name="label_name">Name</string>
+    <string name="label_email">Email</string>
+    <string name="label_go_to_sign_in"><u>Have an account? Login</u></string>
+    <string name="btn_sign_up">Sign Up</string>
+    <string name="label_password_confirmation">Password confirmation</string>
+    <string name="enter_email">Please, enter your email address</string>
+    <string name="enter_verification_code">Now, enter the verification code that we have sent to your email</string>
+    <string name="btn_send_verification_code">Send email</string>
+    <string name="enter_new_password">New password</string>
+    <string name="enter_new_password_confirmation">New password confirmation</string>
+    <string name="label_verification_code">Verification code</string>
+    <string name="btn_change_password">Change password</string>
+</resources>
