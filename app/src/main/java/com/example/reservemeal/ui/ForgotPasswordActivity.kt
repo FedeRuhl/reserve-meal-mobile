@@ -1,10 +1,10 @@
-package com.example.reservemeal
+package com.example.reservemeal.ui
 
 import android.content.Intent
-import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import com.example.reservemeal.R
 import kotlinx.android.synthetic.main.activity_forgot_password.*
 
 class ForgotPasswordActivity : AppCompatActivity() {
