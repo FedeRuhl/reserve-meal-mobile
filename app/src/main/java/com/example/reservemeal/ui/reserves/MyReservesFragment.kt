@@ -1,16 +1,16 @@
-package com.example.reservemeal.ui.ui.reserves
+package com.example.reservemeal.ui.reserves
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.reservemeal.*
+import com.example.reservemeal.utility.ListMyReserves
+import com.example.reservemeal.utility.ListMyReservesAdapter
 
 class MyReservesFragment : Fragment() {
 

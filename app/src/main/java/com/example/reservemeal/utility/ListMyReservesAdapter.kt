@@ -1,10 +1,10 @@
-package com.example.reservemeal
+package com.example.reservemeal.utility
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.list_element.view.*
+import com.example.reservemeal.R
 import kotlinx.android.synthetic.main.list_element.view.tvProductName
 import kotlinx.android.synthetic.main.list_element.view.tvProductPrice
 import kotlinx.android.synthetic.main.list_my_reserves.view.*

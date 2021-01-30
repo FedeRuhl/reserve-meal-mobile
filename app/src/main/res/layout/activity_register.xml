@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="12dp"
-    tools:context=".ui.MainActivity">
+    tools:context=".ui.session.MainActivity">
     <!---Extiende de view group-->
 
     <TextView

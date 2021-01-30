@@ -1,20 +1,16 @@
-package com.example.reservemeal.ui.ui.home
+package com.example.reservemeal.ui.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.reservemeal.ListAdapter
-import com.example.reservemeal.ListElement
+import com.example.reservemeal.utility.ListAdapter
+import com.example.reservemeal.utility.ListElement
 import com.example.reservemeal.R
-import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment : Fragment() {
 

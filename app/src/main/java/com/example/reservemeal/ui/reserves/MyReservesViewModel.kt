@@ -1,4 +1,4 @@
-package com.example.reservemeal.ui.ui.reserves
+package com.example.reservemeal.ui.reserves
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

@@ -1,4 +1,4 @@
-package com.example.reservemeal.ui.ui.funds
+package com.example.reservemeal.ui.funds
 
 import android.os.Bundle
 import android.view.LayoutInflater

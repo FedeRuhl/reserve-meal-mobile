@@ -1,13 +1,13 @@
-package com.example.reservemeal.ui.ui.home
+package com.example.reservemeal.ui.funds
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class HomeViewModel : ViewModel() {
+class AddFundsViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is home Fragment"
+        value = "This is slideshow Fragment"
     }
     val text: LiveData<String> = _text
 }

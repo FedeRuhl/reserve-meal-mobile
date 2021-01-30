@@ -1,4 +1,4 @@
-package com.example.reservemeal.ui
+package com.example.reservemeal.ui.session
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity

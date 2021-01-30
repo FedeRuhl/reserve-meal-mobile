@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.MainActivity2"
+            android:name=".ui.session.MainActivity2"
             android:label="@string/title_activity_main2"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -21,13 +21,13 @@
         </activity>
         <activity android:name=".ui.ExampleActivity" />
         <activity
-            android:name=".ui.ForgotPasswordActivity"
+            android:name=".ui.session.ForgotPasswordActivity"
             android:launchMode="singleInstance" />
         <activity
-            android:name=".ui.RegisterActivity"
+            android:name=".ui.session.RegisterActivity"
             android:launchMode="singleInstance" />
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.session.MainActivity"
             android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

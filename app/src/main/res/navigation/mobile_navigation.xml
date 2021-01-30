@@ -7,25 +7,25 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.example.reservemeal.ui.ui.home.HomeFragment"
+        android:name="com.example.reservemeal.ui.home.HomeFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/nav_create_meal"
-        android:name="com.example.reservemeal.ui.ui.meal.CreateMealFragment"
+        android:name="com.example.reservemeal.ui.meal.CreateMealFragment"
         android:label="@string/label_create_meal"
         tools:layout="@layout/fragment_create_meal" />
 
     <fragment
         android:id="@+id/nav_add_funds"
-        android:name="com.example.reservemeal.ui.ui.funds.AddFundsFragment"
+        android:name="com.example.reservemeal.ui.funds.AddFundsFragment"
         android:label="@string/label_add_funds"
         tools:layout="@layout/fragment_add_funds" />
 
     <fragment
         android:id="@+id/nav_my_reserves"
-        android:name="com.example.reservemeal.ui.ui.reserves.MyReservesFragment"
+        android:name="com.example.reservemeal.ui.reserves.MyReservesFragment"
         android:label="@string/label_my_reserves"
         tools:layout="@layout/fragment_my_reserves" />
 </navigation>

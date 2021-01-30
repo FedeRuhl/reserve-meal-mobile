@@ -1,4 +1,4 @@
-package com.example.reservemeal.ui.ui.meal
+package com.example.reservemeal.ui.meal
 
 import android.app.Activity
 import android.content.Intent
