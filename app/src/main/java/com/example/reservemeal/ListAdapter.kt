@@ -1,22 +1,22 @@
 package com.example.reservemeal
 
-import android.content.Context
+
 import android.view.LayoutInflater
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
-import androidx.transition.Fade
-import androidx.transition.TransitionManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.list_element.view.*
+
 
 class ListAdapter(): RecyclerView.Adapter<ListAdapter.ViewHolder>(){
      var list = ArrayList<ListElement>()
 
-     class ViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
+     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
           fun bind(element: ListElement) = with(itemView){
                tvProductName.text = element.name
-               tvProductPrice.text = element.price.toString()
-               tvProductStatus.text = element.status.toString()
+               tvProductPrice.text = String.format(resources.getString(R.string.price_product), element.price)
+               tvProductDescription.text = element.description
+               tvProductStatus.text = if (element.status) "Available" else "Not available"
           }
      }
 

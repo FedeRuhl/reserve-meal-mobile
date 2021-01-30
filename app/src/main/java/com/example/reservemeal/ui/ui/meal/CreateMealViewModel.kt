@@ -1,10 +1,10 @@
-package com.example.reservemeal.ui.ui.gallery
+package com.example.reservemeal.ui.ui.meal
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class GalleryViewModel : ViewModel() {
+class CreateMealViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
         value = "This is gallery Fragment"

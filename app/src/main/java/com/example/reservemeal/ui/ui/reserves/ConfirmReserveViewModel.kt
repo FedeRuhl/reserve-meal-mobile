@@ -1,10 +1,10 @@
-package com.example.reservemeal.ui.ui.slideshow
+package com.example.reservemeal.ui.ui.reserves
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class SlideshowViewModel : ViewModel() {
+class ConfirmReserveViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
         value = "This is slideshow Fragment"

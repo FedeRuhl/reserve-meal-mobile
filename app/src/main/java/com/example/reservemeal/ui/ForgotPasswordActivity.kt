@@ -17,6 +17,16 @@ class ForgotPasswordActivity : AppCompatActivity() {
             llStepTwo.visibility = View.VISIBLE
         }
 
+        tvGoToSignIn.setOnClickListener {
+            if (llStepTwo.visibility == View.VISIBLE)
+            {
+                llStepTwo.visibility = View.GONE
+                llStepOne.visibility = View.VISIBLE
+            }
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+
         btnChangePassword.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
