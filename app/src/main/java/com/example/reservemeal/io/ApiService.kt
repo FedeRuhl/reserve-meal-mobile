@@ -1,5 +1,6 @@
 package com.example.reservemeal.io
 
+import com.example.reservemeal.io.response.ForgetResponse
 import com.example.reservemeal.io.response.LoginResponse
 import com.example.reservemeal.io.response.RegisterResponse
 import okhttp3.OkHttpClient
@@ -22,6 +23,19 @@ interface ApiService {
                      @Query("password") password:String,
                      @Query("dni") dni:String
     ): Call<RegisterResponse>
+
+    @POST("password/email")
+    fun postForget(
+        @Query("email") email: String
+    ): Call<ForgetResponse>
+
+    @POST("password/reset")
+    fun postReset(
+        @Query("email") email:String,
+        @Query("password") password: String,
+        @Query("password_confirmation") passwordConfirmation: String,
+        @Query("code") code:String
+    ): Call<ForgetResponse>
 
     companion object Factory{
         private const val BASE_URL = "http://10.0.2.2/reserve-meal/public/api/"
