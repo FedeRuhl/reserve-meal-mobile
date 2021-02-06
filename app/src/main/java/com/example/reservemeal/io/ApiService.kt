@@ -3,14 +3,13 @@ package com.example.reservemeal.io
 import com.example.reservemeal.io.response.ForgetResponse
 import com.example.reservemeal.io.response.LoginResponse
 import com.example.reservemeal.io.response.RegisterResponse
+import com.example.reservemeal.models.Product
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.Headers
-import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface ApiService {
     @POST("login")
@@ -36,6 +35,9 @@ interface ApiService {
         @Query("password_confirmation") passwordConfirmation: String,
         @Query("code") code:String
     ): Call<ForgetResponse>
+
+    @GET("products")
+    fun getProducts(@Header("Authorization") authHead:String): Call<ArrayList<Product>>
 
     companion object Factory{
         private const val BASE_URL = "http://10.0.2.2/reserve-meal/public/api/"

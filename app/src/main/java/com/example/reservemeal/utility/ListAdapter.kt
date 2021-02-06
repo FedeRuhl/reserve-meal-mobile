@@ -4,20 +4,41 @@ package com.example.reservemeal.utility
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.reservemeal.R
+import com.example.reservemeal.models.Product
 import kotlinx.android.synthetic.main.list_element.view.*
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class ListAdapter(): RecyclerView.Adapter<ListAdapter.ViewHolder>(){
-     var list = ArrayList<ListElement>()
+     var list = ArrayList<Product>()
 
      class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-          fun bind(element: ListElement) = with(itemView){
+          fun bind(element: Product) = with(itemView){
                tvProductName.text = element.name
-               tvProductPrice.text = String.format(resources.getString(R.string.price_product), element.price)
+               //var prices = element.prices
+               tvProductPrice.text = //if (element.prices.size > 0) element.prices[0].dateUntil else "que swe yo"
+                    String.format(resources.getString(R.string.price_product),
+                         if (element.prices.size > 0)
+                         {
+                              element.prices.firstOrNull {
+                                   val today = Date()
+                                   val dateUntil = SimpleDateFormat("yyyy-MM-dd").parse(it.dateUntil)
+                                   dateUntil?.after(today) ?: false
+                              }?.price ?: 0.0
+                         }
+                         else 0.0
+                    )
+
+               //tvProductPrice.text = String.format(resources.getString(R.string.price_product), element.price)
                tvProductDescription.text = element.description
-               tvProductStatus.text = if (element.status) "Available" else "Not available"
+               tvProductStatus.text = if (element.stock > 0) "Available" else "Not available"
           }
      }
 

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,11 +12,26 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.reservemeal.utility.ListAdapter
 import com.example.reservemeal.utility.ListElement
 import com.example.reservemeal.R
+import com.example.reservemeal.io.ApiService
+import com.example.reservemeal.models.Product
+import com.example.reservemeal.utility.PreferenceHelper
+import com.example.reservemeal.utility.PreferenceHelper.get
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class HomeFragment : Fragment() {
 
     private val listAdapter = ListAdapter()
     private lateinit var listRecyclerView: RecyclerView
+
+    private val preferences by lazy{
+        PreferenceHelper.defaultPrefs(requireActivity())
+    }
+
+    private val apiService: ApiService by lazy {
+        ApiService.create()
+    }
 
     private lateinit var homeViewModel: HomeViewModel
 
@@ -45,10 +61,36 @@ class HomeFragment : Fragment() {
     }
 
     private fun init() {
-        val elements = ArrayList<ListElement>()
+        loadProducts()
+
+        /*val elements = ArrayList<Product>()
         elements.add(ListElement("Sanguche milanesa", "Main food",250.0, true))
         elements.add(ListElement("Milanesa con papas", "Second food", 350.0, true))
         elements.add(ListElement("Ensalada", "Third food",250.0, true))
-        listAdapter.list = elements
+        listAdapter.list = elements*/
+    }
+
+    private fun loadProducts() {
+        val jwt = preferences.getString("jwt", "")
+        val call = apiService.getProducts("Bearer $jwt")
+        call.enqueue(object: Callback<ArrayList<Product>>{
+            override fun onFailure(call: Call<ArrayList<Product>>, t: Throwable) {
+                Toast.makeText(requireActivity(), t.localizedMessage, Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onResponse(
+                call: Call<ArrayList<Product>>,
+                response: Response<ArrayList<Product>>
+            ) {
+                if (response.isSuccessful)
+                {
+                    response.body()?.let{
+                        listAdapter.list = it
+                        listAdapter.notifyDataSetChanged()
+                    }
+                }
+            }
+        })
+
     }
 }
