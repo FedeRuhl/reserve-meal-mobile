@@ -55,6 +55,13 @@ interface ApiService {
         @Query("product_id") productId: Int
     ): Call<ProductPriceResponse>
 
+    @POST("user/add-funds")
+    fun addFunds(
+        @Header("Authorization") authHead: String,
+        @Query("dni") dni: String,
+        @Query("amount") amount:Float
+    ): Call <FundsResponse>
+
     companion object Factory{
         private const val BASE_URL = "http://10.0.2.2/reserve-meal/public/api/"
 
