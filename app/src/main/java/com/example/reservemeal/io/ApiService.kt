@@ -1,9 +1,8 @@
 package com.example.reservemeal.io
 
-import com.example.reservemeal.io.response.ForgetResponse
-import com.example.reservemeal.io.response.LoginResponse
-import com.example.reservemeal.io.response.RegisterResponse
+import com.example.reservemeal.io.response.*
 import com.example.reservemeal.models.Product
+import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
@@ -11,16 +10,18 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 
+
 interface ApiService {
     @POST("login")
     @Headers("Accept: application/json")
-    fun postLogin(@Query("dni") dni:String, @Query("password") password:String): Call<LoginResponse>
+    fun postLogin(@Query("dni") dni: String, @Query("password") password: String): Call<LoginResponse>
 
     @POST("register")
-    fun postRegister(@Query("name") name:String,
-                     @Query("email") email:String,
-                     @Query("password") password:String,
-                     @Query("dni") dni:String
+    fun postRegister(
+        @Query("name") name: String,
+        @Query("email") email: String,
+        @Query("password") password: String,
+        @Query("dni") dni: String
     ): Call<RegisterResponse>
 
     @POST("password/email")
@@ -30,14 +31,29 @@ interface ApiService {
 
     @POST("password/reset")
     fun postReset(
-        @Query("email") email:String,
+        @Query("email") email: String,
         @Query("password") password: String,
         @Query("password_confirmation") passwordConfirmation: String,
-        @Query("code") code:String
+        @Query("code") code: String
     ): Call<ForgetResponse>
 
     @GET("products")
-    fun getProducts(@Header("Authorization") authHead:String): Call<ArrayList<Product>>
+    fun getProducts(@Header("Authorization") authHead: String): Call<ArrayList<Product>>
+
+    @POST("products/store")
+    fun postProduct(
+        @Header("Authorization") authHead: String,
+        @Query("name") name: String,
+        @Query("description") description: String,
+        @Query("stock") stock: Int
+    ): Call<ProductResponse>
+
+    @POST("productPrices/store")
+    fun createPrice(
+        @Header("Authorization") authHead: String,
+        @Query("price") price: Float,
+        @Query("product_id") productId: Int
+    ): Call<ProductPriceResponse>
 
     companion object Factory{
         private const val BASE_URL = "http://10.0.2.2/reserve-meal/public/api/"

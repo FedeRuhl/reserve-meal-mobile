@@ -8,14 +8,32 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.reservemeal.R
+import com.example.reservemeal.io.ApiService
+import com.example.reservemeal.io.response.ProductPriceResponse
+import com.example.reservemeal.io.response.ProductResponse
+import com.example.reservemeal.ui.session.MainActivity2
+import com.example.reservemeal.utility.PreferenceHelper
 import kotlinx.android.synthetic.main.fragment_create_meal.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class CreateMealFragment : Fragment() {
+
+    private val preferences by lazy{
+        PreferenceHelper.defaultPrefs(requireActivity())
+    }
+
+    private val apiService: ApiService by lazy {
+        ApiService.create()
+    }
 
     private lateinit var createMealViewModel: CreateMealViewModel
     private var images: ArrayList<Uri?>? = null
@@ -42,6 +60,65 @@ class CreateMealFragment : Fragment() {
         btnAddImage.setOnClickListener {
             pickImagesIntent()
         }
+        btnAddMeal.setOnClickListener {
+            createMeal()
+        }
+    }
+
+    private fun createMeal() {
+        val jwt = preferences.getString("jwt", "")
+        val call = apiService.postProduct("Bearer $jwt", etName.text.toString(), etDescription.text.toString(), etStock.text.toString().toInt())
+        call.enqueue(object: Callback<ProductResponse>{
+            override fun onFailure(call: Call<ProductResponse>, t: Throwable) {
+                Toast.makeText(requireActivity(), t.localizedMessage, Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onResponse(
+                call: Call<ProductResponse>,
+                response: Response<ProductResponse>
+            ) {
+                if (response.isSuccessful && response.body()?.success == true)
+                {
+                    val postProductResponse = response.body()
+                    postProductResponse?.let{
+                        val productId = it.product.id
+                        val price = etPrice.text.toString().toFloat()
+                        createPrice(productId, price)
+                    } ?: run {
+                        Toast.makeText(requireActivity(), "Unauthorized. Please, try again later", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                else
+                {
+                    Toast.makeText(requireActivity(), response.body()?.message ?: response.errorBody().toString(), Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
+    }
+
+    private fun createPrice(productId: Int, price: Float) {
+        val jwt = preferences.getString("jwt", "")
+        val call = apiService.createPrice("Bearer $jwt", price, productId)
+        call.enqueue(object: Callback<ProductPriceResponse>{
+            override fun onFailure(call: Call<ProductPriceResponse>, t: Throwable) {
+                Toast.makeText(requireActivity(), t.localizedMessage, Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onResponse(
+                call: Call<ProductPriceResponse>,
+                response: Response<ProductPriceResponse>
+            ) {
+                if (response.isSuccessful && response.body()?.success == true)
+                {
+                    Toast.makeText(requireActivity(), "Product successfully created", Toast.LENGTH_SHORT).show()
+                    goToMainActivity2()
+                }
+                else
+                {
+                    Toast.makeText(requireActivity(), response.body()?.message ?: response.errorBody().toString(), Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
@@ -72,5 +149,10 @@ class CreateMealFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun goToMainActivity2(){
+        val intent = Intent(requireActivity(), MainActivity2::class.java)
+        startActivity(intent)
     }
 }

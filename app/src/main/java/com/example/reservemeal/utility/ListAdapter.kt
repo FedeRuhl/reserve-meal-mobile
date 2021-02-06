@@ -22,8 +22,7 @@ class ListAdapter(): RecyclerView.Adapter<ListAdapter.ViewHolder>(){
      class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
           fun bind(element: Product) = with(itemView){
                tvProductName.text = element.name
-               //var prices = element.prices
-               tvProductPrice.text = //if (element.prices.size > 0) element.prices[0].dateUntil else "que swe yo"
+               tvProductPrice.text =
                     String.format(resources.getString(R.string.price_product),
                          if (element.prices.size > 0)
                          {
@@ -35,8 +34,6 @@ class ListAdapter(): RecyclerView.Adapter<ListAdapter.ViewHolder>(){
                          }
                          else 0.0
                     )
-
-               //tvProductPrice.text = String.format(resources.getString(R.string.price_product), element.price)
                tvProductDescription.text = element.description
                tvProductStatus.text = if (element.stock > 0) "Available" else "Not available"
           }
