@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.reservemeal.R
+import com.example.reservemeal.models.Price
 import com.example.reservemeal.models.Product
 import kotlinx.android.synthetic.main.list_element.view.*
 import java.text.SimpleDateFormat
@@ -24,15 +25,7 @@ class ListAdapter(): RecyclerView.Adapter<ListAdapter.ViewHolder>(){
                tvProductName.text = element.name
                tvProductPrice.text =
                     String.format(resources.getString(R.string.price_product),
-                         if (element.prices.size > 0)
-                         {
-                              element.prices.firstOrNull {
-                                   val today = Date()
-                                   val dateUntil = SimpleDateFormat("yyyy-MM-dd").parse(it.dateUntil)
-                                   dateUntil?.after(today) ?: false
-                              }?.price ?: 0.0
-                         }
-                         else 0.0
+                         element.getLastPrice()
                     )
                tvProductDescription.text = element.description
                tvProductStatus.text = if (element.stock > 0) "Available" else "Not available"

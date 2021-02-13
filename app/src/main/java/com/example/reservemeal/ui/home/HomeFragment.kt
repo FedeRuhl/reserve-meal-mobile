@@ -7,18 +7,21 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.reservemeal.utility.ListAdapter
-import com.example.reservemeal.utility.ListElement
 import com.example.reservemeal.R
 import com.example.reservemeal.io.ApiService
 import com.example.reservemeal.models.Product
+import com.example.reservemeal.ui.funds.AddFundsFragment
+import com.example.reservemeal.ui.reserves.ConfirmReserveFragment
+import com.example.reservemeal.utility.ListAdapter
 import com.example.reservemeal.utility.PreferenceHelper
-import com.example.reservemeal.utility.PreferenceHelper.get
+import com.example.reservemeal.utility.RecyclerTouchListener
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
 
 class HomeFragment : Fragment() {
 
@@ -58,10 +61,28 @@ class HomeFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        listRecyclerView.addOnItemTouchListener(
+            RecyclerTouchListener(
+                activity, //requireActivity()
+                listRecyclerView,
+                object : RecyclerTouchListener.ClickListener {
+                    override fun onClick(view: View?, position: Int) {
+                        val item = listAdapter.list[position]
+                        val args = Bundle()
+                        args.putString("productId", item.id.toString())
+                        args.putString("productName", item.name)
+                        args.putString("productPrice", item.getLastPrice().toString())
+                        findNavController().navigate(R.id.action_nav_home_to_confirmReserveFragment, args)
+                    }
+                    override fun onLongClick(view: View?, position: Int) {}
+                })
+        )
     }
 
     private fun init() {
         loadProducts()
+
+
 
         /*val elements = ArrayList<Product>()
         elements.add(ListElement("Sanguche milanesa", "Main food",250.0, true))
@@ -73,7 +94,7 @@ class HomeFragment : Fragment() {
     private fun loadProducts() {
         val jwt = preferences.getString("jwt", "")
         val call = apiService.getProducts("Bearer $jwt")
-        call.enqueue(object: Callback<ArrayList<Product>>{
+        call.enqueue(object : Callback<ArrayList<Product>> {
             override fun onFailure(call: Call<ArrayList<Product>>, t: Throwable) {
                 Toast.makeText(requireActivity(), t.localizedMessage, Toast.LENGTH_SHORT).show()
             }
@@ -82,9 +103,8 @@ class HomeFragment : Fragment() {
                 call: Call<ArrayList<Product>>,
                 response: Response<ArrayList<Product>>
             ) {
-                if (response.isSuccessful)
-                {
-                    response.body()?.let{
+                if (response.isSuccessful) {
+                    response.body()?.let {
                         listAdapter.list = it
                         listAdapter.notifyDataSetChanged()
                     }

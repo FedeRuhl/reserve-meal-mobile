@@ -39,4 +39,6 @@
     <string name="label_add">Add</string>
     <string name="label_my_reserves">My reserves</string>
     <string name="label_pick_date">Pick date</string>
+    <string name="minQuantity">1</string>
+    <string name="btn_confirm">Confirm</string>
 </resources>
