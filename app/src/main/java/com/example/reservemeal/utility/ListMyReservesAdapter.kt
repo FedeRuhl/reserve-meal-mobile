@@ -5,17 +5,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.reservemeal.R
+import com.example.reservemeal.models.Reserve
 import kotlinx.android.synthetic.main.list_element.view.tvProductName
 import kotlinx.android.synthetic.main.list_element.view.tvProductPrice
 import kotlinx.android.synthetic.main.list_my_reserves.view.*
 
 class ListMyReservesAdapter(): RecyclerView.Adapter<ListMyReservesAdapter.ViewHolder>() {
-    var list = ArrayList<ListMyReserves>()
+    var list = ArrayList<Reserve>()
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-        fun bind(element: ListMyReserves) = with(itemView){
-            tvProductName.text = element.name
-            tvProductPrice.text = String.format(resources.getString(R.string.price_product), element.price)
-            tvScheduledDate.text =  String.format(resources.getString(R.string.scheduled_date), element.scheduledDate, element.scheduledHour)
+        fun bind(element: Reserve) = with(itemView){
+            tvProductName.text = element.product.name
+            tvProductPrice.text = String.format(resources.getString(R.string.price_product), element.amount)
+            tvScheduledDate.text = element.scheduledDate.subSequence(0, element.scheduledDate.length-3) //date without seconds
         }
     }
 

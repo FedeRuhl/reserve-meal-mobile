@@ -2,6 +2,7 @@ package com.example.reservemeal.io
 
 import com.example.reservemeal.io.response.*
 import com.example.reservemeal.models.Product
+import com.example.reservemeal.models.Reserve
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -70,6 +71,11 @@ interface ApiService {
         @Query("quantity") quantity: Int,
         @Query("amount") amount: Float
     ):  Call <FundsResponse>
+
+    @GET("my-reservations")
+    fun getMyReservations(
+        @Header("Authorization") authHead: String
+    ): Call <ReservationResponse>
 
     companion object Factory{
         private const val BASE_URL = "http://10.0.2.2/reserve-meal/public/api/"

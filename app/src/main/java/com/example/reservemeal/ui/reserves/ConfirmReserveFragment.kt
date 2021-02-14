@@ -14,6 +14,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.reservemeal.R
 import com.example.reservemeal.io.ApiService
 import com.example.reservemeal.io.response.FundsResponse
@@ -93,7 +94,6 @@ class ConfirmReserveFragment : Fragment() {
 
     private fun performConfirm() {
         val jwt = preferences.getString("jwt", "")
-        Toast.makeText(requireActivity(), datePicked, Toast.LENGTH_SHORT).show()
         val call = apiService.postReservation("Bearer $jwt", datePicked, productId.toInt(), etProductQuantity.text.toString().toInt(), tvProductPrice.text.toString().toFloat())
         call.enqueue(object: retrofit2.Callback<FundsResponse> {
             override fun onFailure(call: Call<FundsResponse>, t: Throwable) {
@@ -105,6 +105,7 @@ class ConfirmReserveFragment : Fragment() {
                 {
                     response.body().let {
                         Toast.makeText(requireActivity(), it?.message, Toast.LENGTH_SHORT).show()
+                        findNavController().navigate(R.id.action_confirmReserveFragment_to_nav_my_reserves)
                     }
                 }
                 else
