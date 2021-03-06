@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
                     call: Call<LoginResponse>,
                     response: Response<LoginResponse>
                 ) {
-                    if (response.isSuccessful)
+                    if (response.isSuccessful && response.body()?.success == true)
                     {
                         val loginResponse = response.body()
                         loginResponse?.let{

@@ -78,7 +78,7 @@ interface ApiService {
     ): Call <ReservationResponse>
 
     companion object Factory{
-        private const val BASE_URL = "http://10.0.2.2/reserve-meal/public/api/"
+        private const val BASE_URL = "http://192.168.1.9/reserve-meal/public/api/"
 
         fun create(): ApiService{
             val interceptor = HttpLoggingInterceptor()

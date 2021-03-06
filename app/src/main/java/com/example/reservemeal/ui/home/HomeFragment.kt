@@ -1,5 +1,6 @@
 package com.example.reservemeal.ui.home
 
+import android.media.Image
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,9 +19,12 @@ import com.example.reservemeal.ui.reserves.ConfirmReserveFragment
 import com.example.reservemeal.utility.ListAdapter
 import com.example.reservemeal.utility.PreferenceHelper
 import com.example.reservemeal.utility.RecyclerTouchListener
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.list_element.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
 
 
 class HomeFragment : Fragment() {
@@ -81,14 +85,6 @@ class HomeFragment : Fragment() {
 
     private fun init() {
         loadProducts()
-
-
-
-        /*val elements = ArrayList<Product>()
-        elements.add(ListElement("Sanguche milanesa", "Main food",250.0, true))
-        elements.add(ListElement("Milanesa con papas", "Second food", 350.0, true))
-        elements.add(ListElement("Ensalada", "Third food",250.0, true))
-        listAdapter.list = elements*/
     }
 
     private fun loadProducts() {
@@ -111,6 +107,5 @@ class HomeFragment : Fragment() {
                 }
             }
         })
-
     }
 }

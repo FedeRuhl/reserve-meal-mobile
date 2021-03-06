@@ -14,9 +14,15 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.example.reservemeal.R
+import com.example.reservemeal.utility.PreferenceHelper
+import com.example.reservemeal.utility.PreferenceHelper.set
 
 class MainActivity2 : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
+
+    private val preferences by lazy {
+        PreferenceHelper.defaultPrefs(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +45,7 @@ class MainActivity2 : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return if (item.itemId == R.id.action_log_out) {
+            preferences["jwt"] = ""
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             true

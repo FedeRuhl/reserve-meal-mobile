@@ -20,7 +20,9 @@ import com.example.reservemeal.io.response.ProductPriceResponse
 import com.example.reservemeal.io.response.ProductResponse
 import com.example.reservemeal.ui.session.MainActivity2
 import com.example.reservemeal.utility.PreferenceHelper
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_create_meal.*
+import kotlinx.android.synthetic.main.list_element.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

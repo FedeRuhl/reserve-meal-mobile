@@ -45,20 +45,21 @@
 
                 <ImageView
                     android:id="@+id/iconImageView"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
+                    android:layout_width="275dp"
+                    android:layout_height="125dp"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center"
                     android:paddingLeft="14dp"
                     android:paddingRight="14dp"
-                    app:srcCompat="@drawable/ic_menu_camera" />
+                    app:srcCompat="@drawable/food"/>
 
                 <TextView
                     android:id="@+id/tvProductDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
                     android:layout_marginBottom="2dp"
                     android:text="This is the description"
                     android:gravity="center"
