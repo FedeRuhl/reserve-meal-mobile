@@ -19,10 +19,13 @@ import com.example.reservemeal.R
 import com.example.reservemeal.io.ApiService
 import com.example.reservemeal.io.response.FundsResponse
 import com.example.reservemeal.utility.PreferenceHelper
+import com.example.reservemeal.utility.ViewPagerAdapter
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_add_funds.*
 import kotlinx.android.synthetic.main.fragment_confirm_reserve.*
 import kotlinx.android.synthetic.main.fragment_confirm_reserve.tvProductName
 import kotlinx.android.synthetic.main.fragment_confirm_reserve.tvProductPrice
+import kotlinx.android.synthetic.main.list_element.view.*
 import kotlinx.android.synthetic.main.list_my_reserves.*
 import retrofit2.Call
 import retrofit2.Response
@@ -58,9 +61,11 @@ class ConfirmReserveFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val productName = arguments?.getString("productName");
-        val productPrice = arguments?.getString("productPrice");
-        productId = arguments?.getString("productId") ?: "NULL";
+        val productName = arguments?.getString("productName")
+        val productPrice = arguments?.getString("productPrice")
+        productId = arguments?.getString("productId") ?: "NULL"
+        val productImages = arguments?.getStringArrayList("productImages") ?: ArrayList()
+        getImages(productImages)
         tvProductName.text = productName
         tvProductPrice.text = productPrice
         btnPickDate.setOnClickListener {
@@ -90,6 +95,11 @@ class ConfirmReserveFragment : Fragment() {
         btnConfirm.setOnClickListener {
             performConfirm()
         }
+    }
+
+    private fun getImages(productImages: ArrayList<String>) {
+            val adapter = ViewPagerAdapter(requireActivity(), productImages)
+            view_pager.adapter = adapter
     }
 
     private fun performConfirm() {

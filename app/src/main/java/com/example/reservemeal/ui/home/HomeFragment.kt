@@ -76,6 +76,7 @@ class HomeFragment : Fragment() {
                         args.putString("productId", item.id.toString())
                         args.putString("productName", item.name)
                         args.putString("productPrice", item.getLastPrice().toString())
+                        args.putStringArrayList("productImages", item.getImagesLinks())
                         findNavController().navigate(R.id.action_nav_home_to_confirmReserveFragment, args)
                     }
                     override fun onLongClick(view: View?, position: Int) {}

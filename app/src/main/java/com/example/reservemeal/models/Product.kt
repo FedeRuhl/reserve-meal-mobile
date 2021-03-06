@@ -1,7 +1,10 @@
 package com.example.reservemeal.models
 
+import android.content.res.Resources
+import com.example.reservemeal.R
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class Product(
     val id:Int,
@@ -23,5 +26,17 @@ class Product(
             }?.price ?: 0.0F
         }
         return lastPrice
+    }
+
+    fun getImagesLinks():ArrayList<String>
+    {
+        val array: ArrayList<String> = ArrayList()
+        images.forEach {
+            //val baseUrl = Resources.getSystem().getString(R.string.menu_home)
+            val baseUrl = "http://192.168.1.9/reserve-meal/public/"
+            val link = if (it.productImage.contains("http")) it.productImage else baseUrl + it.productImage
+            array.add(link)
+        }
+        return array
     }
 }
