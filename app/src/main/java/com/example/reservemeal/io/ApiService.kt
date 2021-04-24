@@ -1,11 +1,12 @@
 package com.example.reservemeal.io
 
-import android.media.Image
 import com.example.reservemeal.io.response.*
 import com.example.reservemeal.models.Product
-import com.example.reservemeal.models.Reserve
-import com.google.gson.GsonBuilder
+import com.google.gson.JsonObject
+import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
+import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -16,7 +17,10 @@ import retrofit2.http.*
 interface ApiService {
     @POST("login")
     @Headers("Accept: application/json")
-    fun postLogin(@Query("dni") dni: String, @Query("password") password: String): Call<LoginResponse>
+    fun postLogin(
+        @Query("dni") dni: String,
+        @Query("password") password: String
+    ): Call<LoginResponse>
 
     @POST("register")
     fun postRegister(
@@ -61,8 +65,8 @@ interface ApiService {
     fun addFunds(
         @Header("Authorization") authHead: String,
         @Query("dni") dni: String,
-        @Query("amount") amount:Float
-    ): Call <FundsResponse>
+        @Query("amount") amount: Float
+    ): Call<FundsResponse>
 
     @POST("reservations/store")
     fun postReservation(
@@ -71,12 +75,22 @@ interface ApiService {
         @Query("product_id") productId: Int,
         @Query("quantity") quantity: Int,
         @Query("amount") amount: Float
-    ):  Call <FundsResponse>
+    ):  Call<FundsResponse>
 
     @GET("my-reservations")
     fun getMyReservations(
         @Header("Authorization") authHead: String
-    ): Call <ReservationResponse>
+    ): Call<ReservationResponse>
+
+    @Multipart
+    @POST("productImages/storeAll")
+    @Headers("Accept: application/json")
+    fun uploadImages(
+        @Header("Authorization") authHead: String,
+        @Part("product_id") productId: Int,
+        @Part product_images: ArrayList<MultipartBody.Part>,
+        @Part("size") size:Int
+    ): Call<UploadResponse>
 
     companion object Factory{
         private const val BASE_URL = "http://192.168.1.9/reserve-meal/public/api/"
