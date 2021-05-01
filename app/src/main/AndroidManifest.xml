@@ -18,23 +18,7 @@
         android:theme="@style/AppTheme"
         tools:targetApi="n">
         <activity
-            android:name=".ui.session.MainActivity2"
-            android:label="@string/title_activity_main2"
-            android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".ui.session.ForgotPasswordActivity"
-            android:launchMode="singleInstance" />
-        <activity
-            android:name=".ui.session.RegisterActivity"
-            android:launchMode="singleInstance" />
-        <activity
-            android:name=".ui.session.MainActivity"
+            android:name=".ui.session.LoginActivity"
             android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -42,6 +26,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.session.HomeActivity"
+            android:label="@string/title_activity_main2"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".ui.session.ForgotPasswordActivity"
+            android:launchMode="singleInstance" />
+        <activity
+            android:name=".ui.session.RegisterActivity"
+            android:launchMode="singleInstance" />
     </application>
 
 </manifest>

@@ -3,23 +3,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="single" android:id="@+id/grupo">
         <item
             android:id="@+id/nav_home"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_home"
             android:title="@string/menu_home" />
         <item
             android:id="@+id/nav_create_meal"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_add"
             android:title="@string/label_create_meal" />
         <item
             android:id="@+id/nav_add_funds"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_money"
             android:title="@string/label_add_funds" />
 
         <item
             android:id="@+id/nav_my_reserves"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_list"
             android:title="@string/label_my_reserves" />
     </group>
 </menu>

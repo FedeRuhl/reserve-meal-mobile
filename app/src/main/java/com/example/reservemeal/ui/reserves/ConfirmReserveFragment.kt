@@ -1,5 +1,6 @@
 package com.example.reservemeal.ui.reserves
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.icu.util.Calendar
@@ -18,22 +19,19 @@ import androidx.navigation.fragment.findNavController
 import com.example.reservemeal.R
 import com.example.reservemeal.io.ApiService
 import com.example.reservemeal.io.response.FundsResponse
+import com.example.reservemeal.requests.StoreReservationRequest
 import com.example.reservemeal.utility.PreferenceHelper
 import com.example.reservemeal.utility.ViewPagerAdapter
-import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.fragment_add_funds.*
 import kotlinx.android.synthetic.main.fragment_confirm_reserve.*
 import kotlinx.android.synthetic.main.fragment_confirm_reserve.tvProductName
 import kotlinx.android.synthetic.main.fragment_confirm_reserve.tvProductPrice
-import kotlinx.android.synthetic.main.list_element.view.*
-import kotlinx.android.synthetic.main.list_my_reserves.*
 import retrofit2.Call
 import retrofit2.Response
-import java.lang.Double.parseDouble
-import javax.security.auth.callback.Callback
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class ConfirmReserveFragment : Fragment() {
-    private val preferences by lazy{
+    private val preferences by lazy {
         PreferenceHelper.defaultPrefs(requireActivity())
     }
 
@@ -41,8 +39,8 @@ class ConfirmReserveFragment : Fragment() {
         ApiService.create()
     }
     private lateinit var confirmReserveViewModel: ConfirmReserveViewModel
-    private lateinit var datePicked:String
-    private lateinit var productId:String
+    private lateinit var datePicked: String
+    private lateinit var productId: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,15 +49,10 @@ class ConfirmReserveFragment : Fragment() {
     ): View? {
         confirmReserveViewModel =
             ViewModelProvider(requireActivity()).get(ConfirmReserveViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_confirm_reserve, container, false)
-        //val textView: TextView = root.findViewById(R.id.text_slideshow)
-        /*confirmReserveViewModel.text.observe(viewLifecycleOwner, Observer {
-            //  textView.text = it
-        })*/
-        return root
+        return inflater.inflate(R.layout.fragment_confirm_reserve, container, false)
     }
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
+    @SuppressLint("NewApi")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val productName = arguments?.getString("productName")
         val productPrice = arguments?.getString("productPrice")
@@ -69,58 +62,103 @@ class ConfirmReserveFragment : Fragment() {
         tvProductName.text = productName
         tvProductPrice.text = productPrice
         btnPickDate.setOnClickListener {
-            var c = Calendar.getInstance()
-            var day = c.get(Calendar.DAY_OF_MONTH)
-            var month = c.get(Calendar.MONTH)
-            var year = c.get(Calendar.YEAR)
-            var dialog =
+            val c = Calendar.getInstance()
+            val day = c.get(Calendar.DAY_OF_MONTH)
+            val month = c.get(Calendar.MONTH)
+            val year = c.get(Calendar.YEAR)
+            val dialog =
                 context?.let { it1 ->
-                    DatePickerDialog(it1, DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
-                        val timePickerDialog = TimePickerDialog(it1, TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
-                            datePicked = "$year-${month+1}-$dayOfMonth $hourOfDay:$minute"
-                        }, Calendar.HOUR, Calendar.MINUTE, DateFormat.is24HourFormat(it1)).show()
-                    }, year, month, day)
+                    DatePickerDialog(
+                        it1,
+                        DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+                            val timePickerDialog = TimePickerDialog(
+                                it1,
+                                TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+                                    val monthString =
+                                        if ((month + 1).toString().length == 1) "0${month + 1}" else (month + 1).toString()
+                                    val dayString =
+                                        if ((dayOfMonth).toString().length == 1) "0$dayOfMonth" else (dayOfMonth).toString()
+                                    val hourString =
+                                        if ((hourOfDay).toString().length == 1) "0$hourOfDay" else (hourOfDay).toString()
+                                    val minuteString =
+                                        if ((minute).toString().length == 1) "0$minute" else (minute).toString()
+                                    datePicked =
+                                        "$year-$monthString-$dayString $hourString:$minuteString"
+                                },
+                                Calendar.HOUR,
+                                Calendar.MINUTE,
+                                DateFormat.is24HourFormat(it1)
+                            ).show()
+                        },
+                        year,
+                        month,
+                        day
+                    )
                 }
             dialog?.show()
         }
-        etProductQuantity.doAfterTextChanged{
+        etProductQuantity.doAfterTextChanged {
             val quantity = it.toString().toFloatOrNull()
-            if (quantity != null)
-            {
+            if (quantity != null) {
                 val price = productPrice?.toFloat() ?: 0.0F
                 tvProductPrice.text = (price * quantity).toString()
-                //Toast.makeText(requireActivity(), it, Toast.LENGTH_SHORT).show()
             }
         }
         btnConfirm.setOnClickListener {
-            performConfirm()
+            if (this::datePicked.isInitialized && datePicked.isNotEmpty()) {
+                val date =
+                    LocalDateTime.parse(datePicked, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+                if (date.isAfter(LocalDateTime.now()))
+                    performConfirm()
+                else
+                    Toast.makeText(
+                        requireActivity(),
+                        "The selected date must be greater than the current date",
+                        Toast.LENGTH_LONG
+                    ).show()
+            } else
+                Toast.makeText(
+                    requireActivity(),
+                    "Please, select a date before confirming",
+                    Toast.LENGTH_SHORT
+                ).show()
         }
     }
 
     private fun getImages(productImages: ArrayList<String>) {
-            val adapter = ViewPagerAdapter(requireActivity(), productImages)
-            view_pager.adapter = adapter
+        val images =
+            if (productImages.isEmpty()) arrayListOf(R.drawable.food.toString()) else productImages
+
+        val adapter = ViewPagerAdapter(requireActivity(), images)
+        view_pager.adapter = adapter
     }
 
     private fun performConfirm() {
         val jwt = preferences.getString("jwt", "")
-        val call = apiService.postReservation("Bearer $jwt", datePicked, productId.toInt(), etProductQuantity.text.toString().toInt(), tvProductPrice.text.toString().toFloat())
-        call.enqueue(object: retrofit2.Callback<FundsResponse> {
+        val storeReservationRequest = StoreReservationRequest(
+            datePicked,
+            productId.toInt(),
+            etProductQuantity.text.toString().toInt(),
+            tvProductPrice.text.toString().toFloat()
+        )
+        val call = apiService.postReservation("Bearer $jwt", storeReservationRequest)
+        call.enqueue(object : retrofit2.Callback<FundsResponse> {
             override fun onFailure(call: Call<FundsResponse>, t: Throwable) {
                 Toast.makeText(requireActivity(), t.localizedMessage, Toast.LENGTH_SHORT).show()
             }
 
             override fun onResponse(call: Call<FundsResponse>, response: Response<FundsResponse>) {
-                if (response.isSuccessful && response.body()?.success == true)
-                {
+                if (response.isSuccessful && response.body()?.success == true) {
                     response.body().let {
                         Toast.makeText(requireActivity(), it?.message, Toast.LENGTH_SHORT).show()
                         findNavController().navigate(R.id.action_confirmReserveFragment_to_nav_my_reserves)
                     }
-                }
-                else
-                {
-                    Toast.makeText(requireActivity(), response.body()?.message ?: response.errorBody().toString(), Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(
+                        requireActivity(),
+                        response.body()?.message ?: response.errorBody().toString(),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         })

@@ -2,6 +2,7 @@ package com.example.reservemeal.io
 
 import com.example.reservemeal.io.response.*
 import com.example.reservemeal.models.Product
+import com.example.reservemeal.requests.*
 import com.google.gson.JsonObject
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
@@ -18,64 +19,52 @@ interface ApiService {
     @POST("login")
     @Headers("Accept: application/json")
     fun postLogin(
-        @Query("dni") dni: String,
-        @Query("password") password: String
+        @Body request: LoginRequest
     ): Call<LoginResponse>
 
     @POST("register")
     fun postRegister(
-        @Query("name") name: String,
-        @Query("email") email: String,
-        @Query("password") password: String,
-        @Query("dni") dni: String
+        @Body request: RegisterRequest
     ): Call<RegisterResponse>
 
     @POST("password/email")
     fun postForget(
-        @Query("email") email: String
+        @Body request: ForgetRequest
     ): Call<ForgetResponse>
 
     @POST("password/reset")
     fun postReset(
-        @Query("email") email: String,
-        @Query("password") password: String,
-        @Query("password_confirmation") passwordConfirmation: String,
-        @Query("code") code: String
+        @Body request: ResetRequest
     ): Call<ForgetResponse>
 
     @GET("products")
-    fun getProducts(@Header("Authorization") authHead: String): Call<ArrayList<Product>>
+    fun getProducts(
+        @Header("Authorization") authHead: String
+    ): Call<ArrayList<Product>>
 
     @POST("products/store")
     fun postProduct(
         @Header("Authorization") authHead: String,
-        @Query("name") name: String,
-        @Query("description") description: String,
-        @Query("stock") stock: Int
+        @Body request: StoreProductRequest
     ): Call<ProductResponse>
 
     @POST("productPrices/store")
     fun createPrice(
         @Header("Authorization") authHead: String,
-        @Query("price") price: Float,
-        @Query("product_id") productId: Int
+        @Body request: StoreProductPriceRequest
     ): Call<ProductPriceResponse>
 
     @POST("user/add-funds")
     fun addFunds(
         @Header("Authorization") authHead: String,
-        @Query("dni") dni: String,
-        @Query("amount") amount: Float
+        @Body request: AddFundsRequest
     ): Call<FundsResponse>
 
     @POST("reservations/store")
     fun postReservation(
         @Header("Authorization") authHead: String,
-        @Query("scheduled_date") scheduledDate: String,
-        @Query("product_id") productId: Int,
-        @Query("quantity") quantity: Int,
-        @Query("amount") amount: Float
-    ):  Call<FundsResponse>
+        @Body request: StoreReservationRequest
+    ): Call<FundsResponse>
 
     @GET("my-reservations")
     fun getMyReservations(
@@ -89,13 +78,13 @@ interface ApiService {
         @Header("Authorization") authHead: String,
         @Part("product_id") productId: Int,
         @Part product_images: ArrayList<MultipartBody.Part>,
-        @Part("size") size:Int
+        @Part("size") size: Int
     ): Call<UploadResponse>
 
-    companion object Factory{
+    companion object Factory {
         private const val BASE_URL = "http://192.168.1.9/reserve-meal/public/api/"
 
-        fun create(): ApiService{
+        fun create(): ApiService {
             val interceptor = HttpLoggingInterceptor()
             interceptor.level = HttpLoggingInterceptor.Level.BODY
             val client = OkHttpClient.Builder().addInterceptor(interceptor).build()

@@ -10,14 +10,15 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.reservemeal.R
 import com.example.reservemeal.io.ApiService
 import com.example.reservemeal.io.response.ProductPriceResponse
 import com.example.reservemeal.io.response.ProductResponse
 import com.example.reservemeal.io.response.UploadResponse
-import com.example.reservemeal.ui.session.MainActivity2
+import com.example.reservemeal.requests.StoreProductPriceRequest
+import com.example.reservemeal.requests.StoreProductRequest
+import com.example.reservemeal.ui.session.HomeActivity
 import com.example.reservemeal.utility.PreferenceHelper
 import com.example.reservemeal.utility.getFileName
 import kotlinx.android.synthetic.main.fragment_create_meal.*
@@ -40,7 +41,7 @@ class CreateMealFragment : Fragment() {
 
     private lateinit var createMealViewModel: CreateMealViewModel
     private lateinit var images: ArrayList<MultipartBody.Part>
-    private var PICK_IMAGES_CODE = 0
+    private var pickImagesCode = 0
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
     override fun onCreateView(
@@ -50,12 +51,7 @@ class CreateMealFragment : Fragment() {
     ): View? {
         createMealViewModel =
             ViewModelProviders.of(this).get(CreateMealViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_create_meal, container, false)
-        //val textView: TextView = root.findViewById(R.id.text_gallery)
-        createMealViewModel.text.observe(viewLifecycleOwner, Observer {
-            //textView.text = it
-        })
-        return root
+        return inflater.inflate(R.layout.fragment_create_meal, container, false)
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
@@ -64,18 +60,28 @@ class CreateMealFragment : Fragment() {
             pickImagesIntent()
         }
         btnAddMeal.setOnClickListener {
-            createMeal()
+            if (etName.text.isNotEmpty() && etDescription.text.isNotEmpty() && etStock.text.isNotEmpty() && etPrice.text.isNotEmpty()) {
+                if (this::images.isInitialized && images.isNotEmpty())
+                    createMeal(withImages = true)
+                else
+                    createMeal()
+            } else
+                Toast.makeText(requireActivity(), R.string.complete_all_fields, Toast.LENGTH_LONG)
+                    .show()
         }
     }
 
 
-    private fun createMeal() {
+    private fun createMeal(withImages: Boolean = false) {
         val jwt = preferences.getString("jwt", "")
-        val call = apiService.postProduct(
-            "Bearer $jwt",
+        val storeProductRequest = StoreProductRequest(
             etName.text.toString(),
             etDescription.text.toString(),
             etStock.text.toString().toInt()
+        )
+        val call = apiService.postProduct(
+            "Bearer $jwt",
+            storeProductRequest
         )
         call.enqueue(object : Callback<ProductResponse> {
             override fun onFailure(call: Call<ProductResponse>, t: Throwable) {
@@ -90,9 +96,10 @@ class CreateMealFragment : Fragment() {
                     val postProductResponse = response.body()
                     postProductResponse?.let {
                         val productId = it.product.id
-                        createImages(productId)
                         val price = etPrice.text.toString().toFloat()
                         createPrice(productId, price)
+                        if (withImages)
+                            createImages(productId)
                     } ?: run {
                         Toast.makeText(
                             requireActivity(),
@@ -136,7 +143,8 @@ class CreateMealFragment : Fragment() {
 
     private fun createPrice(productId: Int, price: Float) {
         val jwt = preferences.getString("jwt", "")
-        val call = apiService.createPrice("Bearer $jwt", price, productId)
+        val storeProductPriceRequest = StoreProductPriceRequest(price, productId)
+        val call = apiService.createPrice("Bearer $jwt", storeProductPriceRequest)
         call.enqueue(object : Callback<ProductPriceResponse> {
             override fun onFailure(call: Call<ProductPriceResponse>, t: Throwable) {
                 Toast.makeText(requireActivity(), t.localizedMessage, Toast.LENGTH_LONG).show()
@@ -152,7 +160,7 @@ class CreateMealFragment : Fragment() {
                         "Product successfully created",
                         Toast.LENGTH_LONG
                     ).show()
-                    goToMainActivity2()
+                    goToHomeActivity()
                 } else {
                     Toast.makeText(
                         requireActivity(),
@@ -169,13 +177,12 @@ class CreateMealFragment : Fragment() {
         intent.type = "image/*"
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
         intent.action = Intent.ACTION_GET_CONTENT
-        //intent.addCategory(Intent.CATEGORY_OPENABLE)
-        startActivityForResult(Intent.createChooser(intent, "Select image/s"), PICK_IMAGES_CODE)
+        startActivityForResult(Intent.createChooser(intent, "Select image/s"), pickImagesCode)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == PICK_IMAGES_CODE) {
+        if (requestCode == pickImagesCode) {
             if (resultCode == Activity.RESULT_OK) {
 
                 if (data?.data != null) {
@@ -220,8 +227,8 @@ class CreateMealFragment : Fragment() {
         }
     }
 
-    private fun goToMainActivity2() {
-        val intent = Intent(requireActivity(), MainActivity2::class.java)
+    private fun goToHomeActivity() {
+        val intent = Intent(requireActivity(), HomeActivity::class.java)
         startActivity(intent)
     }
 }

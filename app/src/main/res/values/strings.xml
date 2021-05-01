@@ -41,4 +41,5 @@
     <string name="label_pick_date">Pick date</string>
     <string name="minQuantity">1</string>
     <string name="btn_confirm">Confirm</string>
+    <string name="complete_all_fields">All fields must be filled in</string>
 </resources>

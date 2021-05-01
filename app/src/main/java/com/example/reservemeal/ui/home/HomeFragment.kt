@@ -2,9 +2,7 @@ package com.example.reservemeal.ui.home
 
 import android.media.Image
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -19,8 +17,10 @@ import com.example.reservemeal.ui.reserves.ConfirmReserveFragment
 import com.example.reservemeal.utility.ListAdapter
 import com.example.reservemeal.utility.PreferenceHelper
 import com.example.reservemeal.utility.RecyclerTouchListener
+import com.example.reservemeal.utility.getPayloadValue
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.list_element.*
+import kotlinx.android.synthetic.main.nav_header_main.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -32,7 +32,7 @@ class HomeFragment : Fragment() {
     private val listAdapter = ListAdapter()
     private lateinit var listRecyclerView: RecyclerView
 
-    private val preferences by lazy{
+    private val preferences by lazy {
         PreferenceHelper.defaultPrefs(requireActivity())
     }
 
@@ -53,13 +53,10 @@ class HomeFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        //val textView: TextView = view.findViewById(R.id.text_gallery)
-        /*homeViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })*/
         listRecyclerView = view.findViewById(R.id.listRecyclerView)
         listRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        listRecyclerView.adapter =listAdapter
+        listRecyclerView.adapter = listAdapter
+
         super.onViewCreated(view, savedInstanceState)
     }
 
@@ -77,8 +74,12 @@ class HomeFragment : Fragment() {
                         args.putString("productName", item.name)
                         args.putString("productPrice", item.getLastPrice().toString())
                         args.putStringArrayList("productImages", item.getImagesLinks())
-                        findNavController().navigate(R.id.action_nav_home_to_confirmReserveFragment, args)
+                        findNavController().navigate(
+                            R.id.action_nav_home_to_confirmReserveFragment,
+                            args
+                        )
                     }
+
                     override fun onLongClick(view: View?, position: Int) {}
                 })
         )
@@ -102,8 +103,16 @@ class HomeFragment : Fragment() {
             ) {
                 if (response.isSuccessful) {
                     response.body()?.let {
-                        listAdapter.list = it
-                        listAdapter.notifyDataSetChanged()
+                        if (it.isNotEmpty()) {
+                            listAdapter.list = it
+                            listAdapter.notifyDataSetChanged()
+                        } else {
+                            Toast.makeText(
+                                requireActivity(),
+                                "There is not products yet",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 }
             }

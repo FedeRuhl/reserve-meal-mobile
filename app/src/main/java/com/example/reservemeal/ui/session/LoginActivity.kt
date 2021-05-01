@@ -6,6 +6,7 @@ import android.os.Bundle
 import com.example.reservemeal.R
 import com.example.reservemeal.io.ApiService
 import com.example.reservemeal.io.response.LoginResponse
+import com.example.reservemeal.requests.LoginRequest
 import com.example.reservemeal.utility.PreferenceHelper
 import com.example.reservemeal.utility.PreferenceHelper.get
 import com.example.reservemeal.utility.PreferenceHelper.set
@@ -15,7 +16,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity() {
     private val apiService: ApiService by lazy {
         ApiService.create()
     }
@@ -29,14 +30,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         if (preferences["jwt", ""].contains("."))
-            goToMainActivity2()
+            goToHomeActivity()
 
         tvGoToRegister.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
         }
 
-        tvGoToForget.setOnClickListener{
+        tvGoToForget.setOnClickListener {
             val intent = Intent(this, ForgotPasswordActivity::class.java)
             startActivity(intent)
         }
@@ -47,11 +48,16 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private fun clearInputs() {
+        etDNI.text.clear()
+        etPassword.text.clear()
+    }
+
     private fun performLogin() {
-        if(etDNI.text.isNotEmpty() && etPassword.text.isNotEmpty())
-        {
-            val call =apiService.postLogin(etDNI.text.toString(), etPassword.text.toString())
-            call.enqueue(object: Callback<LoginResponse> {
+        if (etDNI.text.isNotEmpty() && etPassword.text.isNotEmpty()) {
+            val loginRequest = LoginRequest(etDNI.text.toString(), etPassword.text.toString())
+            val call = apiService.postLogin(loginRequest)
+            call.enqueue(object : Callback<LoginResponse> {
                 override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                     toast("An error has occurred in the communication with our server. Please, try again later")
                 }
@@ -60,18 +66,15 @@ class MainActivity : AppCompatActivity() {
                     call: Call<LoginResponse>,
                     response: Response<LoginResponse>
                 ) {
-                    if (response.isSuccessful && response.body()?.success == true)
-                    {
+                    if (response.isSuccessful && response.body()?.success == true) {
                         val loginResponse = response.body()
-                        loginResponse?.let{
+                        loginResponse?.let {
                             createSessionPreference(loginResponse.jwt)
-                            goToMainActivity2()
+                            goToHomeActivity()
                         } ?: run {
                             toast("Unauthorized. Please, try again later")
                         }
-                    }
-                    else
-                    {
+                    } else {
                         toast("The credentials don't match")
                     }
                 }
@@ -79,13 +82,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun createSessionPreference(accessToken: String){
+    private fun createSessionPreference(accessToken: String) {
+        preferences.all.clear()
         preferences["jwt"] = accessToken
     }
 
-    private fun goToMainActivity2()
-    {
-        val intent = Intent(this, MainActivity2::class.java)
+    private fun goToHomeActivity() {
+        clearInputs()
+
+        val intent = Intent(this, HomeActivity::class.java)
         startActivity(intent)
     }
 }

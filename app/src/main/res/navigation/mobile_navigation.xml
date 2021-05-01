@@ -12,7 +12,8 @@
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_nav_home_to_confirmReserveFragment"
-            app:destination="@id/confirmReserveFragment" />
+            app:destination="@id/confirmReserveFragment"
+            app:launchSingleTop="false" />
     </fragment>
 
     <fragment
@@ -35,7 +36,7 @@
     <fragment
         android:id="@+id/confirmReserveFragment"
         android:name="com.example.reservemeal.ui.reserves.ConfirmReserveFragment"
-        android:label="ConfirmReserveFragment" >
+        android:label="Confirm reserve">
         <action
             android:id="@+id/action_confirmReserveFragment_to_nav_my_reserves"
             app:destination="@id/nav_my_reserves" />

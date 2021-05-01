@@ -20,7 +20,7 @@ import retrofit2.Response
 
 class MyReservesFragment : Fragment() {
 
-    private val preferences by lazy{
+    private val preferences by lazy {
         PreferenceHelper.defaultPrefs(requireActivity())
     }
 
@@ -39,22 +39,20 @@ class MyReservesFragment : Fragment() {
         loadReserves()
         myReservesViewModel =
             ViewModelProvider(requireActivity()).get(MyReservesViewModel::class.java)
-            //ViewModelProviders.of(this).get(MyReservesViewModel::class.java)
         return inflater.inflate(R.layout.fragment_my_reserves, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         listRecyclerView = view.findViewById(R.id.myReservesRecyclerView)
         listRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        listRecyclerView.adapter =listAdapter
+        listRecyclerView.adapter = listAdapter
         super.onViewCreated(view, savedInstanceState)
-        //loadReserves()
     }
 
     private fun loadReserves() {
         val jwt = preferences.getString("jwt", "")
         val call = apiService.getMyReservations("Bearer $jwt")
-        call.enqueue(object: Callback<ReservationResponse>{
+        call.enqueue(object : Callback<ReservationResponse> {
             override fun onFailure(call: Call<ReservationResponse>, t: Throwable) {
                 Toast.makeText(requireActivity(), t.localizedMessage, Toast.LENGTH_SHORT).show()
             }
@@ -65,28 +63,25 @@ class MyReservesFragment : Fragment() {
             ) {
                 if (response.isSuccessful && response.body()?.success == true) {
                     response.body()?.let {
-                        if (it.reserves.size > 0)
-                        {
+                        if (it.reserves.size > 0) {
                             listAdapter.list = it.reserves
                             listAdapter.notifyDataSetChanged()
-                        }
-                        else
-                        {
-                            Toast.makeText(requireActivity(), "There is not reserves yet", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(
+                                requireActivity(),
+                                "There is not reserves yet",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
-                }
-                else
-                {
-                    Toast.makeText(requireActivity(), response.body()?.message ?: response.errorBody().toString(), Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(
+                        requireActivity(),
+                        response.body()?.message ?: response.errorBody().toString(),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         })
-    }
-
-    private fun init() {
-        /*val elements = ArrayList<ListMyReserves>()
-        elements.add(ListMyReserves("Sanguche milanesa", 100.0, "01/02/2021", "15:00"))
-        listAdapter.list = elements*/
     }
 }
