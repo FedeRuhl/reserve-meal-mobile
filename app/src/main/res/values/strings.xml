@@ -17,7 +17,7 @@
     <string name="enter_new_password_confirmation">New password confirmation</string>
     <string name="label_verification_code">Verification code</string>
     <string name="btn_change_password">Change password</string>
-    <string name="title_activity_main2">MainActivity</string>
+    <string name="title_activity_main2">HomeActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>

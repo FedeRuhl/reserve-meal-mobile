@@ -25,8 +25,8 @@ fun getPayloadValue(jwt: String, key: String): String {
     if (data.isEmpty()) return ""
 
     val obj = JSONObject(data)
-    println(obj)
-    return obj[key].toString()
+    return obj.optString(key)
+    //return obj[key].toString()
 }
 
 private fun getPayloadJWT(jwt: String): String {

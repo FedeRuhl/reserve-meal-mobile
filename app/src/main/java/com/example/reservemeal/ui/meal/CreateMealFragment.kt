@@ -25,9 +25,7 @@ import kotlinx.android.synthetic.main.fragment_create_meal.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import retrofit2.*
 
 
 class CreateMealFragment : Fragment() {
@@ -100,6 +98,8 @@ class CreateMealFragment : Fragment() {
                         createPrice(productId, price)
                         if (withImages)
                             createImages(productId)
+                        else
+                            goToHomeActivity()
                     } ?: run {
                         Toast.makeText(
                             requireActivity(),
@@ -136,7 +136,8 @@ class CreateMealFragment : Fragment() {
                         response.body()?.message ?: response.errorBody().toString(),
                         Toast.LENGTH_LONG
                     ).show()
-                }
+                } else
+                    goToHomeActivity()
             }
         })
     }
@@ -160,7 +161,6 @@ class CreateMealFragment : Fragment() {
                         "Product successfully created",
                         Toast.LENGTH_LONG
                     ).show()
-                    goToHomeActivity()
                 } else {
                     Toast.makeText(
                         requireActivity(),
@@ -230,5 +230,6 @@ class CreateMealFragment : Fragment() {
     private fun goToHomeActivity() {
         val intent = Intent(requireActivity(), HomeActivity::class.java)
         startActivity(intent)
+        activity?.finish()
     }
 }

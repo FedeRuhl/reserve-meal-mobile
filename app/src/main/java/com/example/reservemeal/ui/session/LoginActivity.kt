@@ -83,8 +83,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun createSessionPreference(accessToken: String) {
-        preferences.all.clear()
-        preferences["jwt"] = accessToken
+        preferences.set("jwt", accessToken)
+        println("preferences: " + preferences.getString("jwt", ""))
     }
 
     private fun goToHomeActivity() {
@@ -92,5 +92,6 @@ class LoginActivity : AppCompatActivity() {
 
         val intent = Intent(this, HomeActivity::class.java)
         startActivity(intent)
+        finish()
     }
 }

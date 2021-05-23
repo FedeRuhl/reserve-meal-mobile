@@ -22,6 +22,12 @@ interface ApiService {
         @Body request: LoginRequest
     ): Call<LoginResponse>
 
+    @POST("logout")
+    @Headers("Accept: application/json")
+    fun postLogout(
+        @Header("Authorization") authHead: String
+    ): Call<Void>
+
     @POST("register")
     fun postRegister(
         @Body request: RegisterRequest

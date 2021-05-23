@@ -13,11 +13,16 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.reservemeal.R
+import com.example.reservemeal.io.ApiService
 import com.example.reservemeal.utility.PreferenceHelper
 import com.example.reservemeal.utility.PreferenceHelper.set
 import com.example.reservemeal.utility.getPayloadValue
+import com.example.reservemeal.utility.toast
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.nav_header_main.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class HomeActivity : AppCompatActivity() {
@@ -25,6 +30,10 @@ class HomeActivity : AppCompatActivity() {
 
     private val preferences by lazy {
         PreferenceHelper.defaultPrefs(this)
+    }
+
+    private val apiService: ApiService by lazy {
+        ApiService.create()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,15 +74,28 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return if (item.itemId == R.id.action_log_out) {
-            preferences.all.clear()
-            preferences["jwt"] = ""
-
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
-            finish()
+            performLogout()
             true
         } else
             super.onOptionsItemSelected(item);
+    }
+
+    private fun performLogout() {
+        val jwt = preferences.getString("jwt", "")
+        val call = apiService.postLogout("Bearer $jwt")
+        call.enqueue(object : Callback<Void> {
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                toast(t.localizedMessage as CharSequence)
+            }
+
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                println(response)
+                preferences["jwt"] = ""
+                val intent = Intent(this@HomeActivity, LoginActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
